@@ -53,8 +53,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(makeErrorResponse(errorCode));
     }
 
-    private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
-        return ErrorResponse.builder()
+    private ApiResponse makeErrorResponse(ErrorCode errorCode) {
+        return ApiResponse.builder()
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .build();
@@ -65,8 +65,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(makeErrorResponse(errorCode, message));
     }
 
-    private ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
-        return ErrorResponse.builder()
+    private ApiResponse makeErrorResponse(ErrorCode errorCode, String message) {
+        return ApiResponse.builder()
                 .code(errorCode.name())
                 .message(message)
                 .build();
@@ -77,14 +77,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(makeErrorResponse(e, errorCode));
     }
 
-    private ErrorResponse makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
-        List<ErrorResponse.ValidationError> validationErrorList = e.getBindingResult()
+    private ApiResponse makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
+        List<ApiResponse.ValidationError> validationErrorList = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(ErrorResponse.ValidationError::of)
+                .map(ApiResponse.ValidationError::of)
                 .collect(Collectors.toList());
 
-        return ErrorResponse.builder()
+        return ApiResponse.builder()
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .errors(validationErrorList)

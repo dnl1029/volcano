@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class ErrorResponse {
+public class ApiResponse {
 
     private final String code;
     private final String message;

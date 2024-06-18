@@ -107,5 +107,21 @@ public class MemberService {
         return savedMember;
     }
 
+    public boolean deleteMember(UserIdRequestDto userIdRequestDto) {
+        Member member = getMember(userIdRequestDto)
+                .orElseThrow(()-> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
+        log.info("deleteMember. userId : {}, userName : {}"
+                , member.getUserId()
+                , member.getUserName()
+        );
+        if(memberRepository.existsById(userIdRequestDto.getUserId())) {
+            memberRepository.deleteById(userIdRequestDto.getUserId());
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
 }

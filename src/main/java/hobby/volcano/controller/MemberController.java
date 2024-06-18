@@ -1,5 +1,6 @@
 package hobby.volcano.controller;
 
+import hobby.volcano.common.ApiResponse;
 import hobby.volcano.common.CommonErrorCode;
 import hobby.volcano.common.RestApiException;
 import hobby.volcano.dto.MemberEditRequestDto;
@@ -29,20 +30,20 @@ public class MemberController {
 
     @Operation(summary = "login and get gwt token api", description = "최초 로그인 및 jwt 토큰만료시 로그인화면에서 사용하는 api. 성공시 jwt 토큰 return")
     @PostMapping("login")
-    public String getMemberIsPresent(@RequestBody UserIdRequestDto userIdRequestDto) {
+    public ApiResponse getMemberIsPresent(@RequestBody UserIdRequestDto userIdRequestDto) {
         String jwt = jwtIssueService.createJwt(userIdRequestDto);
-        return jwt;
+        return ApiResponse.builder().code("200").message(jwt).build();
     }
 
     @Operation(summary = "get userName api", description = "userId를 입력시, userName 리턴해주는 api.")
     @PostMapping("getMember/name")
-    public ResponseEntity<String> getMemberName(@RequestBody UserIdRequestDto userIdRequestDto) {
+    public ApiResponse getMemberName(@RequestBody UserIdRequestDto userIdRequestDto) {
         Optional<Member> member = memberService.getMember(userIdRequestDto);
         if (member.isPresent() && member.get().getUserName() == null) {
-            return ResponseEntity.status(HttpStatus.OK).body(userIdRequestDto.getUserId() + "는 등록된 이름이 없습니다.");
+            return ApiResponse.builder().code("200").message(userIdRequestDto.getUserId() + "는 등록된 이름이 없습니다.").build();
         }
         else if (member.isPresent() && member.get().getUserName() != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(userIdRequestDto.getUserId() + "는 등록된 이름이 있습니다.");
+            return ApiResponse.builder().code("200").message(member.get().getUserName()).build();
         }
         else {
             throw new RestApiException(CommonErrorCode.USER_NOT_FOUND);
@@ -51,13 +52,13 @@ public class MemberController {
 
     @Operation(summary = "get imageFileName api", description = "userId를 입력시, imageFileName 리턴해주는 api.")
     @PostMapping("getMember/image")
-    public ResponseEntity<String> getMemberImage(@RequestBody UserIdRequestDto userIdRequestDto) {
+    public ApiResponse getMemberImage(@RequestBody UserIdRequestDto userIdRequestDto) {
         Optional<Member> member = memberService.getMember(userIdRequestDto);
         if (member.isPresent() && member.get().getImageFileName() == null) {
-            return ResponseEntity.status(HttpStatus.OK).body(userIdRequestDto.getUserId() + "는 등록된 프로필 이미지가 없습니다.");
+            return ApiResponse.builder().code("200").message(userIdRequestDto.getUserId() + "는 등록된 프로필 이미지가 없습니다.").build();
         }
         else if (member.isPresent() && member.get().getImageFileName() != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(userIdRequestDto.getUserId() + "는 등록된 프로필 이미지가 있습니다.");
+            return ApiResponse.builder().code("200").message(member.get().getImageFileName()).build();
         }
         else {
             throw new RestApiException(CommonErrorCode.USER_NOT_FOUND);
@@ -83,6 +84,18 @@ public class MemberController {
     public List<Member> getMemberAll() {
         List<Member> memberAll = memberService.getMemberAll();
         return memberAll;
+    }
+
+    @Operation(summary = "delete member api", description = "설정화면에서 관리자 권한으로 멤버를 삭제하는 api.")
+    @PostMapping("member/delete")
+    public ApiResponse deleteMember(@RequestBody UserIdRequestDto userIdRequestDto) {
+        boolean res = memberService.deleteMember(userIdRequestDto);
+        if(res) {
+            return ApiResponse.builder().code("200").message("member가 정상적으로 삭제되었습니다.").build();
+        }
+        else {
+            return ApiResponse.builder().code("400").message("member가 삭제되지 않았습니다.").build();
+        }
     }
 
 }

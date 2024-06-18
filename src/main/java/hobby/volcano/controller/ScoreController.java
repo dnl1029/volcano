@@ -1,5 +1,6 @@
 package hobby.volcano.controller;
 
+import hobby.volcano.common.ApiResponse;
 import hobby.volcano.dto.*;
 import hobby.volcano.entity.Score;
 import hobby.volcano.service.ScoreService;
@@ -56,6 +57,18 @@ public class ScoreController {
     public boolean determineAssignment(@RequestBody WorkDtRequestDto workDtRequestDto) {
         Boolean result = scoreService.determineAssignment(workDtRequestDto);
         return result;
+    }
+
+    @Operation(summary = "delete score api", description = "score 삭제. workDt, userId, gameNum, laneNum, laneOrder, score를 입력하여 삭제하는 api")
+    @PostMapping("score/delete")
+    public ApiResponse deleteScore(@RequestBody ScoreAlignmentRequestDto scoreAlignmentRequestDto) {
+        boolean res = scoreService.deleteScore(scoreAlignmentRequestDto);
+        if(res) {
+            return ApiResponse.builder().code("200").message("score가 정상적으로 삭제되었습니다.").build();
+        }
+        else {
+            return ApiResponse.builder().code("400").message("score가 삭제되지 않았습니다.").build();
+        }
     }
 
 }

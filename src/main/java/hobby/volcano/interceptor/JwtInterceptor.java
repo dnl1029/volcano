@@ -22,9 +22,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        log.info("JwtInterceptor preHandle");
         String jwtToken = request.getHeader(CustomEnum.JWT_TOKEN.getContent());
-//        log.info("jwtToken : {}",jwtToken);
         if(jwtToken.equals(CustomEnum.ADMIN_JWT_KEY.getContent())) {
             MDC.put(CustomEnum.USER_ID.getContent(),"12400454");
         }

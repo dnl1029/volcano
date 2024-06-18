@@ -1,6 +1,7 @@
 package hobby.volcano.service;
 
 import hobby.volcano.common.CommonErrorCode;
+import hobby.volcano.common.CustomEnum;
 import hobby.volcano.common.RestApiException;
 import hobby.volcano.dto.*;
 import hobby.volcano.entity.Member;
@@ -321,6 +322,34 @@ public class ScoreService {
                 .anyMatch(score -> workDtRequestDto.getWorkDt().equals(score.getWorkDt()));
 
         return exists;
+    }
+
+    public boolean deleteScore(ScoreAlignmentRequestDto scoreAlignmentRequestDto) {
+        Score score = scoreRepository.findByWorkDtAndUserIdAndGameNumAndLaneNumAndLaneOrder(
+                scoreAlignmentRequestDto.getWorkDt()
+                , scoreAlignmentRequestDto.getUserId()
+                , scoreAlignmentRequestDto.getGameNum()
+                , scoreAlignmentRequestDto.getLaneNum()
+                , scoreAlignmentRequestDto.getLaneOrder()
+        ).orElseThrow(() -> new RestApiException(CommonErrorCode.RESOURCE_NOT_FOUND));
+
+        log.info("deleteScore. id : {}, workDt : {}, userId : {}, gameNum : {}, laneNum : {}, laneOrder : {}, score : {}"
+                , score.getId()
+                , score.getWorkDt()
+                , score.getUserId()
+                , score.getGameNum()
+                , score.getLaneNum()
+                , score.getLaneOrder()
+                , score.getScore()
+        );
+
+        if(scoreRepository.existsById(score.getId())) {
+            scoreRepository.deleteById(score.getId());
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }
