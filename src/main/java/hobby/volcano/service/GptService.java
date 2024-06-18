@@ -8,6 +8,7 @@ import hobby.volcano.dto.GptRequestDto;
 import hobby.volcano.dto.GptResponseDto;
 import hobby.volcano.dto.ImgurResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GptService {
 
     private final GptConfig gptConfig;
@@ -86,6 +88,11 @@ public class GptService {
     public GptResponseDto upLoadImageAndGetGptResponse(MultipartFile image) {
         GptRequestDto gptRequestDto = upLoadImageAndGetGptRequest(image);
         GptResponseDto gptResponseDto = gptFeignClient.getChatCompletion(authorization, gptRequestDto);
+        log.info("upLoadImageAndGetGptResponse. content : {}, promptTokens : {}, completionTokens : {}, totalTokens : {}"
+                ,gptResponseDto.getChoices().get(0).getMessage().getContent()
+                ,gptResponseDto.getUsage().getPromptTokens()
+                ,gptResponseDto.getUsage().getCompletionTokens()
+                ,gptResponseDto.getUsage().getTotalTokens());
         return gptResponseDto;
     }
 
@@ -97,6 +104,7 @@ public class GptService {
 
             if (firstChoice.isPresent() && firstChoice.get().getMessage() != null) {
                 String contentString = firstChoice.get().getMessage().getContent();
+                log.info("extractContentFromResponse. content : {}",contentString);
                 return ContentDto.fromString(contentString);
             }
         }

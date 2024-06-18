@@ -246,6 +246,19 @@ public class ScoreService {
             if (existingScore.isPresent()) {
                 // 기존 데이터가 존재하면 수정
                 Score scoreToUpdate = existingScore.get();
+                log.info("updateScoreAndInsertAlignment. 수정 전 / workDt : {}, userId : {}, userName : {}, attendance : {}, gameNum : {}, laneNum : {}, laneOrder : {}, score : {}, crtTm : {}, crtNM : {}, chgTm : {}, chgNm : {}"
+                        ,scoreToUpdate.getWorkDt()
+                        ,scoreToUpdate.getUserId()
+                        ,member.get().getUserName()
+                        ,scoreToUpdate.getAttendance()
+                        ,scoreToUpdate.getGameNum()
+                        ,scoreToUpdate.getLaneNum()
+                        ,scoreToUpdate.getLaneOrder()
+                        ,scoreToUpdate.getScore()
+                        ,scoreToUpdate.getCrtTm()
+                        ,scoreToUpdate.getCrtNm()
+                        ,scoreToUpdate.getChgTm()
+                        ,scoreToUpdate.getChgNm());
                 editedScore = Score.builder()
                         .id(scoreToUpdate.getId())
                         .workDt(scoreToUpdate.getWorkDt())
@@ -281,7 +294,19 @@ public class ScoreService {
             }
 
             editedScore = scoreRepository.save(editedScore); // 저장
-
+            log.info("updateScoreAndInsertAlignment. 수정 후 / workDt : {}, userId : {}, userName : {}, attendance : {}, gameNum : {}, laneNum : {}, laneOrder : {}, score : {}, crtTm : {}, crtNM : {}, chgTm : {}, chgNm : {}"
+                    ,editedScore.getWorkDt()
+                    ,editedScore.getUserId()
+                    ,member.get().getUserName()
+                    ,editedScore.getAttendance()
+                    ,editedScore.getGameNum()
+                    ,editedScore.getLaneNum()
+                    ,editedScore.getLaneOrder()
+                    ,editedScore.getScore()
+                    ,editedScore.getCrtTm()
+                    ,editedScore.getCrtNm()
+                    ,editedScore.getChgTm()
+                    ,editedScore.getChgNm());
             return editedScore;
         } else {
             throw new RestApiException(CommonErrorCode.USER_NOT_FOUND);

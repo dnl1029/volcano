@@ -34,13 +34,15 @@ public class JwtIssueService {
         if (member.isEmpty()) {
             throw new RestApiException(USER_NOT_FOUND);
         } else {
-            return Jwts.builder()
+            String jwt = Jwts.builder()
                     .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                     .setClaims(createClaims(userIdRequestDto))
                     .setIssuedAt(now)
                     .setExpiration(createExpiredDate()) // 발급날짜 계산
                     .signWith(SignatureAlgorithm.HS256, createSignature())
                     .compact();
+            log.info("createJwt. 로그인 성공. userID : {}, jwt : {}",userIdRequestDto.getUserId(),jwt);
+            return jwt;
         }
     }
 

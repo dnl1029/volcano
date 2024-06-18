@@ -45,6 +45,14 @@ public class MemberService {
 
         Member member = getMember(userIdRequestDto)
                 .orElseThrow(()-> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
+        log.info("editMemberAll. 수정 전 / userId : {}, userName : {}, imageFileName : {}, statusYn : {}, role : {}, chgTm : {}, chgNm : {}"
+                ,member.getUserId()
+                ,member.getUserName()
+                ,member.getImageFileName()
+                ,member.getStatusYn()
+                ,member.getRole()
+                ,member.getChgTm()
+                ,member.getChgNm());
         Member editedMember = Member.builder()
                 .userId(member.getUserId())
                 .userName(memberEditRequestDto.getUserName() != null ? memberEditRequestDto.getUserName() : member.getUserName())
@@ -58,6 +66,14 @@ public class MemberService {
                 .build();
 
         Member savedMember = memberRepository.save(editedMember);
+        log.info("editMemberAll. 수정 후 / userId : {}, userName : {}, imageFileName : {}, statusYn : {}, role : {}, chgTm : {}, chgNm : {}"
+                ,savedMember.getUserId()
+                ,savedMember.getUserName()
+                ,savedMember.getImageFileName()
+                ,savedMember.getStatusYn()
+                ,savedMember.getRole()
+                ,savedMember.getChgTm()
+                ,savedMember.getChgNm());
         return savedMember;
     }
 
@@ -78,6 +94,16 @@ public class MemberService {
                 .chgNm(memberEditRequestDto.getUserName() != null ? memberEditRequestDto.getUserName() : CustomEnum.SYSTEM.getContent())
                 .build();
         Member savedMember = memberRepository.save(tempMember);
+        log.info("createMember. userId : {}, userName : {}, imageFileName : {}, statusYn : {}, role : {}, crtTm : {}, crtNM : {}, chgTm : {}, chgNm : {}"
+                ,savedMember.getUserId()
+                ,savedMember.getUserName()
+                ,savedMember.getImageFileName()
+                ,savedMember.getStatusYn()
+                ,savedMember.getRole()
+                ,savedMember.getCrtTm()
+                ,savedMember.getCrtNm()
+                ,savedMember.getChgTm()
+                ,savedMember.getChgNm());
         return savedMember;
     }
 

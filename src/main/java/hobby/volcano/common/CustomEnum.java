@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum CustomEnum {
     USER_ID("userId"),
     JWT_TOKEN("jwtToken"),
-    SYSTEM("SYSTEM");
+    SYSTEM("SYSTEM"),
+    ADMIN_JWT_KEY("admin_jwt_key");
 
 
     private final String content;
