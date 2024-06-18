@@ -1,0 +1,46 @@
+server:
+  shutdown: GRACEFUL
+
+spring:
+  application.name: volcano
+  lifecycle:
+    timeout-per-shutdown-phase: 40s #디폴트 30
+  datasource:
+    url: ##jdbc url입력(cafe24 maria db)
+    username: ##DB ID 입력
+    password: ##DB Password 입력
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    properties:
+#      hibernate:
+#        format_sql: true #To beautify or pretty print the SQL
+#        show_sql: true #show sql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+gpt:
+  model: "gpt-4o"
+  messages:
+    - role: "user"
+      content:
+        - type: "text"
+          text: "1. Your role: You are a bowling score image analyst. 2. Audience: You analyze the image on the bowling scoreboard to someone who only wants to know each person's total scores. 3. Information - The total scores on the bowling scoreboard are the numbers under the letter 'HDP'. - In the picture of the bowling scoreboard, the number of alphabets that usually correspond to the first column in the table is the number of people. ex1) When it's A4, B4, C4, and D4, there are four people. ex2) When it's A2, B2, and C2, there are three people. ex3) When it's A, B, and C, there are 3 people. ex4) When it's A1, B3, C3, D4, and E3, there are 5 people. 4. Goal: The goal is that when analyzing the image of the bowling board, only the total scores are answered in the form of an array. I don't need any other information. 5. Constraint - The total number of points on the bowling scoreboard must be equal to the number of people. ex1) When it's A4, B4, C4, and D4, there are 3 people, and the total score is [107, 87, 122, 72]. ex2) When it's A1, B3, and C2, there are three people, and the total score is [210, 82, 77]. - People are usually alphabetized in the first column of a table, but sometimes they may not be. In that case, you just have to try to recognize the total numbers under the 'HDP', not the number of people. - If you recognize the letter 'TH' at the bottom of the same column as the 'HDP' number, exclude the scores to the left of the letter 'TH' from your total score. The scores between the letters ‘HDP’ and ‘TH’ are the total score. - If more than one letter 'HDP' is recognized and more than two bowling scoreboard tables are recognized in the image, instead of responding like [50,60,70], please respond with the phrase '하나의 점수판만 업로드 해주세요.'. 6. Response format: Array 7. Examples of responses: [60,81,90] or [101,71,151,61,94]."
+        - type: "image_url"
+          image_url: ""  ## 빈 값으로 설정하고 input 받기.
+  authorization: ##gpt 인증키 입력
+
+imgur:
+  clientId: ##clientId 인증키 입력
+  type: "file"
+  title: "create image url"
+  description: "bowling score image"
+
+jwt:
+  secret: ##jwt 시크릿키 입력
