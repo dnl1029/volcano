@@ -233,18 +233,16 @@ public class ScoreService {
 //            int tempScore = scoreAlignmentRequestDto.getScore() != null ? scoreAlignmentRequestDto.getScore() : 0;
             Integer tempScore = scoreAlignmentRequestDto.getScore();
 
-            // 동일한 데이터가 있는지 확인
-            Optional<Score> existingScore = scoreRepository.findByWorkDtAndUserIdAndGameNumAndLaneNumAndLaneOrder(
+            // workDt, userId, gameNum 기준, 동일한 데이터가 있는지 확인
+            Optional<Score> existingScore = scoreRepository.findByWorkDtAndUserIdAndGameNum(
                     scoreAlignmentRequestDto.getWorkDt(),
                     scoreAlignmentRequestDto.getUserId(),
-                    tempGameNum,
-                    scoreAlignmentRequestDto.getLaneNum(),
-                    scoreAlignmentRequestDto.getLaneOrder()
+                    tempGameNum
             );
 
             Score editedScore;
             if (existingScore.isPresent()) {
-                // 기존 데이터가 존재하면 수정
+                // workDt, userId, gameNum 기준, 기존 데이터가 존재하면 수정
                 Score scoreToUpdate = existingScore.get();
                 log.info("updateScoreAndInsertAlignment. 수정 전 / workDt : {}, userId : {}, userName : {}, attendance : {}, gameNum : {}, laneNum : {}, laneOrder : {}, score : {}, crtTm : {}, crtNM : {}, chgTm : {}, chgNm : {}"
                         ,scoreToUpdate.getWorkDt()
@@ -266,8 +264,8 @@ public class ScoreService {
 //                        .userName(scoreToUpdate.getUserName())
                         .attendance(scoreToUpdate.getAttendance())
                         .gameNum(scoreToUpdate.getGameNum())
-                        .laneNum(scoreToUpdate.getLaneNum())
-                        .laneOrder(scoreToUpdate.getLaneOrder())
+                        .laneNum(scoreAlignmentRequestDto.getLaneNum())
+                        .laneOrder(scoreAlignmentRequestDto.getLaneOrder())
                         .score(tempScore) // 수정된 값 설정
                         .crtTm(scoreToUpdate.getCrtTm())
                         .crtNm(scoreToUpdate.getCrtNm())
