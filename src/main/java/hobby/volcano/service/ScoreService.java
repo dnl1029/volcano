@@ -1,21 +1,20 @@
 package hobby.volcano.service;
 
+import hobby.volcano.common.ApiResponse;
 import hobby.volcano.common.CommonErrorCode;
-import hobby.volcano.common.CustomEnum;
 import hobby.volcano.common.RestApiException;
 import hobby.volcano.dto.*;
 import hobby.volcano.entity.Member;
 import hobby.volcano.entity.Score;
 import hobby.volcano.repository.ScoreRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.CurrentTimestamp;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static hobby.volcano.common.CommonErrorCode.INVALID_PARAMETER;
 
@@ -350,6 +349,41 @@ public class ScoreService {
         else {
             return false;
         }
+    }
+
+    public MyProfileResponseDto getMyProfile(UserIdRequestDto userIdRequestDto) {
+        Integer tempUserId = userIdRequestDto.getUserId();
+        List<Score> scores = scoreRepository.findByUserId(tempUserId);
+        Optional<Score> latestScore = scores.stream()
+                .max(Comparator.comparing(Score::getWorkDt));
+        String latestWorkDt =  latestScore.map(Score::getWorkDt).orElse(null);
+
+        String imageFileName;
+        Optional<Member> member = memberService.getMember(UserIdRequestDto.builder().userId(tempUserId).build());
+        if (member.isPresent() && member.get().getImageFileName() != null) {
+            imageFileName = member.get().getImageFileName();
+        } else {
+            imageFileName = "";
+        }
+
+        RankingResponseDtoList rankingResponseDtoList = ranking();
+        MyProfileResponseDto myProfileResponseDto = rankingResponseDtoList.getRankings().stream()
+                .filter(f -> f.getUserId().equals(tempUserId))
+                .map(i ->
+                        MyProfileResponseDto.builder()
+                                .userId(i.getUserId())
+                                .userName(i.getUserName())
+                                .imageFileName(imageFileName)
+                                .lastVisitDay(latestWorkDt)
+                                .rankingByMaxScore(i.getRankingByMaxScore())
+                                .rankingByAvgScore(i.getRankingByAvgScore())
+                                .maxScore(i.getMaxScore())
+                                .avgScore(i.getAvgScore())
+                                .build()
+                ).findFirst()
+                .orElseThrow(() -> new RestApiException(INVALID_PARAMETER));
+
+        return myProfileResponseDto;
     }
 
 }

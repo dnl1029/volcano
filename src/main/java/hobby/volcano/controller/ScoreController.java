@@ -1,12 +1,14 @@
 package hobby.volcano.controller;
 
 import hobby.volcano.common.ApiResponse;
+import hobby.volcano.common.CustomEnum;
 import hobby.volcano.dto.*;
 import hobby.volcano.entity.Score;
 import hobby.volcano.service.ScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +19,15 @@ public class ScoreController {
 
     private final ScoreService scoreService;
 
-    @Operation(summary = "get score by userId api", description = "userId입력시 score를 return. 내 월별점수 화면에서 사용하는 api.")
+    @Operation(summary = "get My score by my userId api", description = "jwt토큰에서 userId를 읽어 score를 return. 내 월별점수 화면에서 사용하는 api.")
+    @GetMapping("score/myUserId")
+    public UserScoreResponseListDto getMyUserScoresByYearMonth() {
+        String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
+        UserScoreResponseListDto userScoreResponseListDto = scoreService.userScoresByYearMonth(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build());
+        return userScoreResponseListDto;
+    }
+
+    @Operation(summary = "미사용 api / get score by userId api", description = "userId입력시 score를 return. 내 월별점수 화면에서 사용하는 api.")
     @PostMapping("score/userId")
     public UserScoreResponseListDto getUserScoresByYearMonth(@RequestBody UserIdRequestDto userIdRequestDto) {
         UserScoreResponseListDto userScoreResponseListDto = scoreService.userScoresByYearMonth(userIdRequestDto);
@@ -31,7 +41,7 @@ public class ScoreController {
         return rankingResponseDtoList;
     }
 
-    @Operation(summary = "미사용 스코어 전체조회 api")
+    @Operation(summary = "미사용 api / 스코어 전체조회 api")
     @GetMapping("score/daily/all")
     public DailyScoreResponseDtoList getDailyScoresAll() {
         DailyScoreResponseDtoList dailyScoreResponseDtoList = scoreService.dailyScoresAll();
