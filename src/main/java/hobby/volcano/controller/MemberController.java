@@ -31,7 +31,7 @@ public class MemberController {
     private final ScoreService scoreService;
 
 
-    @Operation(summary = "login and get gwt token api", description = "최초 로그인 및 jwt 토큰만료시 로그인화면에서 사용하는 api. 성공시 jwt 토큰 return")
+    @Operation(summary = "login and get jwt token api", description = "최초 로그인 및 jwt 토큰만료시 로그인화면에서 사용하는 api. 성공시 jwt 토큰 return")
     @PostMapping("login")
     public ApiResponse getMemberIsPresent(@RequestBody UserIdRequestDto userIdRequestDto) {
         String jwt = jwtIssueService.createJwt(userIdRequestDto);
