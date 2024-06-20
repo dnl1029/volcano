@@ -44,7 +44,7 @@ public class MemberController {
         String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
         Optional<Member> member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build());
         if (member.isPresent() && member.get().getUserName() == null) {
-            return ApiResponse.builder().code("200").message(myUserId + "는 등록된 이름이 없습니다.").build();
+            return ApiResponse.builder().code("204").message(myUserId + "는 등록된 이름이 없습니다.").build();
         }
         else if (member.isPresent() && member.get().getUserName() != null) {
             return ApiResponse.builder().code("200").message(member.get().getUserName()).build();
@@ -59,7 +59,7 @@ public class MemberController {
     public ApiResponse getMemberName(@RequestBody UserIdRequestDto userIdRequestDto) {
         Optional<Member> member = memberService.getMember(userIdRequestDto);
         if (member.isPresent() && member.get().getUserName() == null) {
-            return ApiResponse.builder().code("200").message(userIdRequestDto.getUserId() + "는 등록된 이름이 없습니다.").build();
+            return ApiResponse.builder().code("204").message(userIdRequestDto.getUserId() + "는 등록된 이름이 없습니다.").build();
         }
         else if (member.isPresent() && member.get().getUserName() != null) {
             return ApiResponse.builder().code("200").message(member.get().getUserName()).build();
@@ -75,7 +75,7 @@ public class MemberController {
         String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
         Optional<Member> member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build());
         if (member.isPresent() && member.get().getImageFileName() == null) {
-            return ApiResponse.builder().code("200").message(myUserId + "는 등록된 프로필 이미지가 없습니다.").build();
+            return ApiResponse.builder().code("204").message(myUserId + "는 등록된 프로필 이미지가 없습니다.").build();
         }
         else if (member.isPresent() && member.get().getImageFileName() != null) {
             return ApiResponse.builder().code("200").message(member.get().getImageFileName()).build();
@@ -91,7 +91,7 @@ public class MemberController {
         String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
         Optional<Member> member = memberService.getMember(userIdRequestDto);
         if (member.isPresent() && member.get().getImageFileName() == null) {
-            return ApiResponse.builder().code("200").message(userIdRequestDto.getUserId() + "는 등록된 프로필 이미지가 없습니다.").build();
+            return ApiResponse.builder().code("204").message(userIdRequestDto.getUserId() + "는 등록된 프로필 이미지가 없습니다.").build();
         }
         else if (member.isPresent() && member.get().getImageFileName() != null) {
             return ApiResponse.builder().code("200").message(member.get().getImageFileName()).build();

@@ -1,6 +1,8 @@
 package hobby.volcano.interceptor;
 
+import hobby.volcano.common.CommonErrorCode;
 import hobby.volcano.common.CustomEnum;
+import hobby.volcano.common.RestApiException;
 import hobby.volcano.service.JwtIssueService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +25,11 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String jwtToken = request.getHeader(CustomEnum.JWT_TOKEN.getContent());
+
+        if(jwtToken == null) {
+            throw new RestApiException(CommonErrorCode.JWT_TOKEN_NOT_FOUND);
+        }
+
         if(jwtToken.equals(CustomEnum.ADMIN_JWT_KEY.getContent())) {
             MDC.put(CustomEnum.USER_ID.getContent(),"12400454");
         }

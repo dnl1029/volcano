@@ -14,6 +14,7 @@ public enum CommonErrorCode implements ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."),
     JWT_EXPIRATION(HttpStatus.UNAUTHORIZED, "jwt 토큰이 만료되었습니다."),
     JWT_INVALID(HttpStatus.UNAUTHORIZED, "부적절한 jwt 토큰이 입력되었습니다."),
+    JWT_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "jwt 토큰값은 필수입니다.")
     ;
 
 
