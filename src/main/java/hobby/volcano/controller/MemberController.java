@@ -6,6 +6,7 @@ import hobby.volcano.common.CustomEnum;
 import hobby.volcano.common.RestApiException;
 import hobby.volcano.dto.MemberEditRequestDto;
 import hobby.volcano.dto.MyProfileResponseDto;
+import hobby.volcano.dto.NameEditRequestDto;
 import hobby.volcano.dto.UserIdRequestDto;
 import hobby.volcano.entity.Member;
 import hobby.volcano.service.JwtIssueService;
@@ -140,6 +141,25 @@ public class MemberController {
         String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
         MyProfileResponseDto myProfileResponseDto = scoreService.getMyProfile(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build());
         return myProfileResponseDto;
+    }
+
+    @Operation(summary = "edit my name api", description = "jwt토큰에서 userID를 읽어, 내 이름을 수정해주는 api.")
+    @PostMapping("edit/myName")
+    public ApiResponse editMyName(NameEditRequestDto nameEditRequestDto) {
+        String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
+        Member member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build())
+                .orElseThrow(() -> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
+        MemberEditRequestDto memberEditRequestDto = MemberEditRequestDto.builder()
+                .userId(member.getUserId())
+                .userName(nameEditRequestDto.getUserName())
+                .build();
+        Member editedMember = memberService.editMemberAll(memberEditRequestDto);
+        if(editedMember != null) {
+            return ApiResponse.builder().code("200").message("이름 수정을 성공했습니다.").build();
+        }
+        else {
+            return ApiResponse.builder().code("400").message("이름 수정을 실패했습니다.").build();
+        }
     }
 
 
