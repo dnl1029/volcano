@@ -145,7 +145,7 @@ public class MemberController {
 
     @Operation(summary = "edit my name api", description = "jwt토큰에서 userID를 읽어, 내 이름을 수정해주는 api.")
     @PostMapping("edit/myName")
-    public ApiResponse editMyName(NameEditRequestDto nameEditRequestDto) {
+    public ApiResponse editMyName(@RequestBody NameEditRequestDto nameEditRequestDto) {
         String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
         Member member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build())
                 .orElseThrow(() -> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
