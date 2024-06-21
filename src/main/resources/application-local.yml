@@ -1,0 +1,4 @@
+##수정될 정보만 추가
+swagger:
+  server:
+    url: http://localhost:8080
