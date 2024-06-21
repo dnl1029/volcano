@@ -37,6 +37,11 @@ public class JwtInterceptor implements HandlerInterceptor {
             Claims body = jwtIssueService.getClaims(jwtToken).getBody();
             MDC.put(CustomEnum.USER_ID.getContent(),body.get(CustomEnum.USER_ID.getContent()).toString());
         }
+
+        // CORS 설정 추가
+//        response.addHeader("Access-Control-Allow-Origin", "*");
+//        response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
     @Override
