@@ -4,10 +4,7 @@ import hobby.volcano.common.ApiResponse;
 import hobby.volcano.common.CommonErrorCode;
 import hobby.volcano.common.CustomEnum;
 import hobby.volcano.common.RestApiException;
-import hobby.volcano.dto.MemberEditRequestDto;
-import hobby.volcano.dto.MyProfileResponseDto;
-import hobby.volcano.dto.NameEditRequestDto;
-import hobby.volcano.dto.UserIdRequestDto;
+import hobby.volcano.dto.*;
 import hobby.volcano.entity.Member;
 import hobby.volcano.service.JwtIssueService;
 import hobby.volcano.service.MemberService;
@@ -162,5 +159,44 @@ public class MemberController {
         }
     }
 
+    @Operation(summary = "edit my imageFileName api", description = "jwt토큰에서 userID를 읽어, 내 이미지를 수정해주는 api.")
+    @PostMapping("edit/myImageFileName")
+    public ApiResponse editMyImageFileName(@RequestBody ImageFileNameEditRequestDto imageFileNameEditRequestDto) {
+        String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
+        Member member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build())
+                .orElseThrow(() -> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
+        MemberEditRequestDto memberEditRequestDto = MemberEditRequestDto.builder()
+                .userId(member.getUserId())
+                .imageFileName(imageFileNameEditRequestDto.getImageFileName())
+                .build();
+        Member editedMember = memberService.editMemberAll(memberEditRequestDto);
+        if(editedMember != null) {
+            return ApiResponse.builder().code("200").message("이미지 수정을 성공했습니다.").build();
+        }
+        else {
+            return ApiResponse.builder().code("400").message("이미지 수정을 실패했습니다.").build();
+        }
+    }
+
+    @Operation(summary = "get my role api", description = "jwt토큰에서 userID를 읽어, 내 role을 확인하는 api")
+    @GetMapping("get/myRole")
+    public ApiResponse editMyImageFileName() {
+        String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
+        Member member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build())
+                .orElseThrow(() -> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
+        return ApiResponse.builder().code("200").message(member.getRole()).build();
+    }
+
+    @Operation(summary = "check jwt validation", description = "jwt 토큰의 유효성을 체크하여,유효할시 true 반환하는 api")
+    @PostMapping("jwt/validation")
+    public ApiResponse checkJwtTokenValidation(@RequestBody JwtTokenRequestDto jwtTokenRequestDto) {
+        boolean result = jwtIssueService.tokenValidCheck(jwtTokenRequestDto.getJwtToken());
+        if(result) {
+            return ApiResponse.builder().code("200").message(String.valueOf(true)).build();
+        }
+        else {
+            return ApiResponse.builder().code("401").message(String.valueOf(false)).build();
+        }
+    }
 
 }
