@@ -192,7 +192,9 @@ public class ScoreService {
     public DailyScoreResponseDtoList dailyScoresByWorkDt(WorkDtRequestDto workDtRequestDto) {
         List<Score> allScoreList = scoreRepository.findAll();
         List<DailyScoreResponseDto> scoreList = allScoreList.stream()
-                .filter(f -> f.getScore() != null && f.getWorkDt().equals(workDtRequestDto.getWorkDt()))
+                //레인관리하기 화면에서 null로 입력된 초기데이터를 점수 기록하기화면에서 조회하기 위하여, null 제외조건 제거
+//                .filter(f -> f.getScore() != null && f.getWorkDt().equals(workDtRequestDto.getWorkDt()))
+                .filter(f -> f.getWorkDt().equals(workDtRequestDto.getWorkDt()))
                 .map(i -> {
                     // userName 가져오기
                     String userName = memberService.getMember(UserIdRequestDto.builder().userId(i.getUserId()).build())

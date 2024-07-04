@@ -85,8 +85,6 @@ public class JwtIssueService {
     public boolean tokenValidCheck(String jwt) {
         try {
             Jws<Claims> claims = getClaims(jwt);
-//            log.info("expireTime : {}", claims.getBody().getExpiration());
-//            log.info("userId : {}", claims.getBody().get(CustomEnum.USER_ID.getContent()));
             return true;
         }
         catch (ExpiredJwtException e) {
