@@ -180,7 +180,7 @@ public class MemberController {
 
     @Operation(summary = "get my role api", description = "jwt토큰에서 userID를 읽어, 내 role을 확인하는 api")
     @GetMapping("get/myRole")
-    public ApiResponse editMyImageFileName() {
+    public ApiResponse getMyRole() {
         String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
         Member member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build())
                 .orElseThrow(() -> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
@@ -197,6 +197,15 @@ public class MemberController {
         else {
             return ApiResponse.builder().code("401").message(String.valueOf(false)).build();
         }
+    }
+
+    @Operation(summary = "get my userId api", description = "jwt토큰에서 userID를 읽어 return하는 api")
+    @GetMapping("get/myUserId")
+    public ApiResponse getMyUserId() {
+        String myUserId = MDC.get(CustomEnum.USER_ID.getContent());
+        Member member = memberService.getMember(UserIdRequestDto.builder().userId(Integer.valueOf(myUserId)).build())
+                .orElseThrow(() -> new RestApiException(CommonErrorCode.USER_NOT_FOUND));
+        return ApiResponse.builder().code("200").message(String.valueOf(member.getUserId())).build();
     }
 
 }
