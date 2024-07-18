@@ -81,4 +81,11 @@ public class ScoreController {
         }
     }
 
+    @Operation(summary = "get workDt List", description = "캘린더에 표시 목적으로 볼링 점수가 있는 날짜 리스트를 return하는 api.")
+    @GetMapping("score/workDtList")
+    public WorkDtResponseDtoList getScoreExistWorkDtList() {
+        WorkDtResponseDtoList scoreExistWorkDtList = scoreService.getScoreExistWorkDtList();
+        return scoreExistWorkDtList;
+    }
+
 }

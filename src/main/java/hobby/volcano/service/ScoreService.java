@@ -388,4 +388,18 @@ public class ScoreService {
         return myProfileResponseDto;
     }
 
+    public WorkDtResponseDtoList getScoreExistWorkDtList() {
+        List<Score> allScoreList = scoreRepository.findAll();
+        List<String> workDtList = allScoreList.stream()
+//                .filter(f -> f.getScore() != null) // null 값 제외
+                .map(Score::getWorkDt) // workDt 값만 추출
+                .distinct()
+                .sorted() // 오름차순 정렬
+                .collect(Collectors.toList());
+
+        return WorkDtResponseDtoList.builder()
+                .workDtList(workDtList)
+                .build();
+    }
+
 }
