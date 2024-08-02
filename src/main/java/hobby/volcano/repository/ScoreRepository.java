@@ -14,4 +14,7 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
     Optional<Score> findByWorkDtAndUserIdAndGameNum(String workDt, Integer userId, int tempGameNum);
 
     Optional<Score> findByWorkDtAndUserIdAndGameNumAndLaneNumAndLaneOrder(String workDt, Integer userId, int tempGameNum, Integer laneNum, Integer laneOrder);
+
+    // workDt를 기준으로 점수를 조회하는 메서드
+    List<Score> findByWorkDt(String workDt);
 }

@@ -81,6 +81,13 @@ public class ScoreController {
         }
     }
 
+    @Operation(summary = "delete score by workDt api", description = "workDt에 해당하는 score들을 전부 삭제하는 api")
+    @PostMapping("score/delete/workDt")
+    public ApiResponse deleteScoresByWorkDt(@RequestBody WorkDtRequestDto workDtRequestDto) {
+        scoreService.deleteScoresByWorkDt(workDtRequestDto);
+        return ApiResponse.builder().code("200").message("score들이 정상적으로 삭제되었습니다.").build();
+    }
+
     @Operation(summary = "get workDt List", description = "캘린더에 표시 목적으로 볼링 점수가 있는 날짜 리스트를 return하는 api.")
     @GetMapping("score/workDtList")
     public WorkDtResponseDtoList getScoreExistWorkDtList() {

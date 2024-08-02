@@ -7,6 +7,7 @@ import hobby.volcano.dto.*;
 import hobby.volcano.entity.Member;
 import hobby.volcano.entity.Score;
 import hobby.volcano.repository.ScoreRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -351,6 +352,21 @@ public class ScoreService {
         else {
             return false;
         }
+    }
+
+    @Transactional
+    public void deleteScoresByWorkDt(WorkDtRequestDto workDtRequestDto) {
+        // workDt를 기준으로 점수 목록을 조회
+        List<Score> scores = scoreRepository.findByWorkDt(workDtRequestDto.getWorkDt());
+
+        // 삭제할 점수가 없으면 예외를 발생
+        if (scores.isEmpty()) {
+            throw new RestApiException(CommonErrorCode.RESOURCE_NOT_FOUND);
+        }
+
+        // 점수 목록을 삭제
+        scoreRepository.deleteAll(scores);
+        log.info("{}일자 score 삭제",workDtRequestDto.getWorkDt());
     }
 
     public MyProfileResponseDto getMyProfile(UserIdRequestDto userIdRequestDto) {
