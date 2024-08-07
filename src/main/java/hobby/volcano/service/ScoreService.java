@@ -103,6 +103,7 @@ public class ScoreService {
                     return RankingResponseDto.builder()
                             .userId(tempUserId)
                             .userName(tempMember.map(Member::getUserName).orElse("Unknown")) // userName 추가
+                            .imageFileName(tempMember.map(Member::getImageFileName).orElse("default.png"))
                             .maxScore(maxScore)
                             .avgScore(avgScore.intValue())
                             .rankingByMaxScore(0) // 기본값 설정
@@ -143,6 +144,7 @@ public class ScoreService {
             RankingResponseDto newDto = RankingResponseDto.builder()
                     .userId(dto.getUserId())
                     .userName(dto.getUserName()) // userName 추가
+                    .imageFileName(dto.getImageFileName())
                     .maxScore(dto.getMaxScore())
                     .avgScore(dto.getAvgScore())
                     .rankingByMaxScore(type.equals("max") ? currentRank : dto.getRankingByMaxScore())
